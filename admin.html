@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel Admin - Licorería Villena</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #f5f6fa;
+      padding: 30px;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+    .btn-volver {
+      display: block;
+      margin: 0 auto 30px auto;
+      background-color: #2c82e0;
+      color: white;
+      padding: 12px 20px;
+      text-align: center;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 8px;
+      max-width: 200px;
+    }
+    .btn-volver:hover {
+      background-color: #2169c4;
+    }
+    .mensaje {
+      background: #fff;
+      padding: 18px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .fecha {
+      font-size: 13px;
+      color: #888;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>📬 Mensajes Recibidos</h1>
+  <a href="index.html" class="btn-volver">⬅️ Volver al inicio</a>
+
+  <div id="mensajes"></div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDEDHcJ6WVHOd8yIILqSDhFGMwQen6F8gM",
+      authDomain: "licoreriavillena.firebaseapp.com",
+      databaseURL: "https://licoreriavillena-default-rtdb.firebaseio.com",
+      projectId: "licoreriavillena",
+      storageBucket: "licoreriavillena.appspot.com",
+      messagingSenderId: "462920904730",
+      appId: "1:462920904730:web:813fa866d1fb93b47c21a3"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const mensajesRef = ref(db, 'mensajes');
+
+    onValue(mensajesRef, (snapshot) => {
+      const contenedor = document.getElementById("mensajes");
+      contenedor.innerHTML = "";
+      snapshot.forEach(child => {
+        const data = child.val();
+        const div = document.createElement("div");
+        div.className = "mensaje";
+        div.innerHTML = `<div>${data.texto}</div><div class="fecha">${new Date(data.fecha).toLocaleString()}</div>`;
+        contenedor.appendChild(div);
+      });
+    });
+  </script>
+</body>
+</html>
